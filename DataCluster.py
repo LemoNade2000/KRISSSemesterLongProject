@@ -18,14 +18,19 @@ def vectorizeCSV():
         row.name = filename[:-4]
         # row = row.transpose()
         totalDF = totalDF.append(row)
-    totalDF = totalDF.apply(lambda x: x.fillna(x.mean()),axis=0)
+    print(totalDF)
+    totalDF = totalDF.apply(lambda x: x.fillna(x.median()),axis=0)
+    print(totalDF.mode(axis = 0))
     return totalDF
 
 def main():
     df = vectorizeCSV()
     print(df.shape)
-    df_reduced = FeatureAgglomeration(n_clusters = 2).fit_transform(df)
-    print(df_reduced.shape)
+    df_reduced = FeatureAgglomeration(n_clusters=2)
+    df_reduced.fit_transform(df)
+    print(df_reduced.labels_)
+    df_reduced = df_reduced.transform(df)
+    print(df_reduced)
     fig = plt.figure(figsize =(10, 7))
     plt.boxplot(df_reduced)
     plt.savefig('Feature1.png')
@@ -34,11 +39,15 @@ def main():
     labels = cluster.labels_
     label_0 = df_reduced[labels == -1]
     label_1 = df_reduced[labels == 0]
+    label_2 = df_reduced[labels == 1]
     sns.scatterplot(data = label_0, x = label_0[:, 0], y = label_0[:, 1], color = 'black')
     sns.scatterplot(data = label_1, x = label_1[:, 0], y = label_1[:, 1], color = 'red')
+    sns.scatterplot(data = label_2, x = label_2[:, 0], y = label_2[:, 1], color = 'blue')
     plt.xlim([0, 30])
     plt.ylim([0, 30])
     plt.savefig('Scatterplot.png')
+    print(df.index[labels == 0])
+    print(df.index[labels == 1])
     print(cluster.labels_)
     return 0
 
