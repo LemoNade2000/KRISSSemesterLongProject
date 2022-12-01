@@ -25,19 +25,19 @@ def vectorizeCSV():
     termDF = termDF.apply(lambda x: x.fillna(x.median()),axis=0)
     return totalDF, termDF
 
-def main():
+def cluster(start):
     df, termDF = vectorizeCSV()
-    df = df.drop(columns = np.arange(30, 34), axis = 1)
-    termDF = termDF.drop(columns = np.arange(30, 34), axis = 1)
+    df = df.drop(columns = np.arange(start, 34), axis = 1)
+    termDF = termDF.drop(columns = np.arange(start, 34), axis = 1)
     df_reduced = FeatureAgglomeration(n_clusters=2)
     df_reduced.fit_transform(df)
     featureLabel = df_reduced.labels_
-    print(df_reduced.labels_)
+    # print(df_reduced.labels_)
     plot_df = df_reduced.transform(df)
     df_reduced = df_reduced.transform(df)
     df_reduced = pd.DataFrame(df_reduced)
     df_reduced.index = df.index
-    print(df_reduced)
+    # print(df_reduced)
     fig = plt.figure(figsize =(10, 7))
     plt.boxplot(plot_df)
     plt.savefig('Feature1.png')
@@ -53,13 +53,15 @@ def main():
     df_reduced.to_csv("TermInformation.csv")
     sns.scatterplot(data = label_0, x = label_0[0], y = label_0[1], color = 'black')
     sns.scatterplot(data = label_1, x = label_1[0], y = label_1[1], color = 'red')
-    sns.scatterplot(data = label_2, x = label_2[0], y = label_2[1], color = 'blue')
+    try :
+        sns.scatterplot(data = label_2, x = label_2[0], y = label_2[1], color = 'blue')
+    except :
+        print("No third clustrer")
     plt.xlim([0, 30])
     plt.ylim([0, 30])
     plt.savefig('Scatterplot.png')
-    print(df.index[labels == 0])
-    print(df.index[labels == 1])
-    print(cluster.labels_)
+    # print(df.index[labels == 0])
+    # print(df.index[labels == 1])
     return df.index[labels == 0]
 
 def retroactive():
@@ -67,12 +69,12 @@ def retroactive():
     df_reduced = FeatureAgglomeration(n_clusters=2)
     df_reduced.fit_transform(df)
     featureLabel = df_reduced.labels_
-    print(df_reduced.labels_)
+    # print(df_reduced.labels_)
     plot_df = df_reduced.transform(df)
     df_reduced = df_reduced.transform(df)
     df_reduced = pd.DataFrame(df_reduced)
     df_reduced.index = df.index
-    print(df_reduced)
+    # print(df_reduced)
     fig = plt.figure(figsize =(10, 7))
     plt.boxplot(plot_df)
     plt.savefig('Feature1Retro.png')
@@ -88,15 +90,17 @@ def retroactive():
     df_reduced.to_csv("TermInformationRetroactive.csv")
     sns.scatterplot(data = label_0, x = label_0[0], y = label_0[1], color = 'black')
     sns.scatterplot(data = label_1, x = label_1[0], y = label_1[1], color = 'red')
-    sns.scatterplot(data = label_2, x = label_2[0], y = label_2[1], color = 'blue')
+    try :
+        sns.scatterplot(data = label_2, x = label_2[0], y = label_2[1], color = 'blue')
+    except :
+        print("No third clustrer")
     plt.xlim([0, 30])
     plt.ylim([0, 30])
     plt.savefig('ScatterplotRetroactive.png')
-    print(df.index[labels == 0])
-    print(df.index[labels == 1])
-    print(cluster.labels_)
+    # print(df.index[labels == 0])
+    # print(df.index[labels == 1])
     return df.index[labels == 0]
 
-main()
+# main()
 # retroactive()
 
